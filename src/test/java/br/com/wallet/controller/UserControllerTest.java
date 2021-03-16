@@ -2,7 +2,10 @@ package br.com.wallet.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.wallet.dto.UserDTO;
@@ -28,7 +32,7 @@ public class UserControllerTest {
 	private static final String EMAIL = "email@teste.com";
 	private static final String NAME = "Jorge Arantes";
 	private static final String PASSWORD = "123321";
-	private static final String URI = "/user";
+	private static final String URL = "/user";
 	
 	@MockBean
 	UserService service;
@@ -36,10 +40,16 @@ public class UserControllerTest {
 	@Autowired
 	MockMvc mvc;
 	
-	
+	@Test
 	public void testSave() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.post(URI).contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+		
+		BDDMockito.given(service.save(Mockito.any(User.class))).willReturn(getMockUser());
+		
+		mvc.perform(MockMvcRequestBuilders.post(URL)
+				.content(getJsonPayLoad())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isCreated());
 		
 		
 	}
@@ -54,7 +64,7 @@ public class UserControllerTest {
 		
 	}
 	
-	public String getJsonPayLoad() throws Throwable {
+	public String getJsonPayLoad() throws JsonProcessingException {
 		UserDTO dto = new UserDTO();
 		dto.setEmail(EMAIL);
 		dto.setName(NAME);

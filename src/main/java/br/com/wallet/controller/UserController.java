@@ -20,7 +20,6 @@ import br.com.wallet.service.UserService;
 public class UserController {
 
 	@Autowired
-
 	private UserService service;
 
 	@PostMapping
