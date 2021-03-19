@@ -15,6 +15,7 @@ import br.com.wallet.entity.User;
 import br.com.wallet.response.Response;
 import br.com.wallet.service.UserService;
 
+//Senha postgree 123
 @RestController
 @RequestMapping("user")
 public class UserController {
